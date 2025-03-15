@@ -1,4 +1,4 @@
-import User from "../modals/user.modal.js";
+import User from "../modals/User.modal.js";
 import { generateToken } from "../libs/utils.js";
 import bcrypt from "bcryptjs";
 
@@ -31,11 +31,11 @@ export const signup = async (req, res) => {
       res.status(201).json({
         data: {
           message: "User created successfully",
-          user: newUser,
+          User: newUser,
         },
       });
     } else {
-      return res.status(400).json({ message: "Failed to create new user" });
+      return res.status(400).json({ message: "Failed to create new User" });
     }
   } catch (error) {
     console.log("Error in signup Controller", error.message);
@@ -86,6 +86,43 @@ export const logout = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   const { fullName, email, password } = req.body;
-  console.log(req.file)
-  res.send(req.file);
+
+  try {
+    if (!req.file) {
+      return res.status(400).send("No file uploaded.");
+    }
+    const fileUrl = `http://localhost:8080/uploads/${req.file.filename}`;
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        fullName,
+        email,
+        profilePic: fileUrl,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      data: {
+        message: "User Profile Updated Successfully",
+        fullName: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
+    });
+  } catch (error) {
+    console.error("Error during file upload:", error);
+    res.status(500).send("Error uploading file.");
+  }
+};
+export const checkAuth = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.log("Error in checkAuth controller:", error.message);
+    res.status(400).json({
+      message: "Failed to check User authentication",
+    });
+  }
 };

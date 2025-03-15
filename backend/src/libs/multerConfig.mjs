@@ -13,7 +13,7 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 // Configure storage settings
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, `./${UPLOAD_DIR}`); // Corrected the directory path
+    cb(null, UPLOAD_DIR); // Corrected the directory path
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
