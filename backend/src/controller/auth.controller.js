@@ -1,6 +1,6 @@
 import User from "../modals/user.modal.js";
 import { generateToken } from "../libs/utils.js";
-import bycrpt from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -16,8 +16,8 @@ export const signup = async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "Email already exists" });
 
-    const salt = await bycrpt.genSalt(10);
-    const hashedPassword = await bycrpt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       fullName,
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
       return res.status(404).json({
         message: "Invalid Credential",
       });
-    const isMatch = await bycrpt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch)
       return res.status(404).json({
@@ -73,6 +73,19 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  const { email, password } = req.body;
-  res.status(200).send({ email: email, password: password });
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "User Logged out Successfull" });
+  } catch (error) {
+    console.log({ "Error in logout controller": error.message });
+    res.status(400).json({
+      message: "Failed to logout user",
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  const { fullName, email, password } = req.body;
+  console.log(req.file)
+  res.send(req.file);
 };

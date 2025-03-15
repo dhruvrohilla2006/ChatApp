@@ -1,5 +1,12 @@
 import express from "express";
-import { login, logout, signup } from "../controller/auth.controller.js";
+import {
+  login,
+  logout,
+  signup,
+  updateProfile,
+} from "../controller/auth.controller.js";
+import { protectedRoute } from "../middleware/auth.middleware.js";
+import upload from "../libs/multerConfig.mjs";
 const Router = express.Router();
 const authRoute = Router;
 
@@ -8,5 +15,12 @@ authRoute.post("/signup", signup);
 authRoute.post("/login", login);
 
 authRoute.post("/logout", logout);
+
+authRoute.put(
+  "/update-profile",
+  protectedRoute,
+  upload.single("file"),
+  updateProfile
+);
 
 export default authRoute;
