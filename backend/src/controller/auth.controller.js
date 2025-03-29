@@ -64,6 +64,9 @@ export const login = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         password: user.password,
+        profilePic: user.profilePic,
+        createdAt: user.createdAt,
+        _id: user._id,
         token,
       },
     });
@@ -88,10 +91,10 @@ export const updateProfile = async (req, res) => {
   const { fullName, email, password } = req.body;
 
   try {
-    if (!req.file) {
+    if (!req.imageUrl) {
       return res.status(400).send("No file uploaded.");
     }
-    const fileUrl = `http://localhost:8080/uploads/${req.file.filename}`;
+    const fileUrl = req.imageUrl;
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {

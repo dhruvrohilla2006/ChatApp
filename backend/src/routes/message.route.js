@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { protectedRoute } from "../middleware/auth.middleware.js";
-import { getUserForSidebar } from "../controller/message.controller.js";
+import {
+  getUserForSidebar,
+  sendMessage,
+} from "../controller/message.controller.js";
 import { getMessages } from "../controller/message.controller.js";
-import upload from "../libs/multerConfig.mjs";
-
+import { uploadImage } from "../libs/imageupload.js";
 const messageRoute = Router();
 
 messageRoute.get("/user", protectedRoute, getUserForSidebar);
-messageRoute.get("/:id",protectedRoute ,upload.single("post"),getMessages)
+messageRoute.get("/:id", protectedRoute, getMessages);
+messageRoute.post("/send/:id", protectedRoute, uploadImage, sendMessage);
 
 export default messageRoute;

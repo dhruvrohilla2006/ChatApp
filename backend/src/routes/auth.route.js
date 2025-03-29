@@ -7,7 +7,7 @@ import {
   checkAuth
 } from "../controller/auth.controller.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
-import upload from "../libs/multerConfig.mjs";
+import { uploadImage } from "../libs/imageupload.js";
 
 const Router = express.Router();
 const authRoute = Router;
@@ -21,7 +21,7 @@ authRoute.post("/logout", logout);
 authRoute.put(
   "/update-profile",
   protectedRoute,
-  upload.single("file"),
+  uploadImage,
   updateProfile
 );
 
