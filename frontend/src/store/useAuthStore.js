@@ -3,7 +3,7 @@ import { axiosInstance } from "../libs/Axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "/";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -19,7 +19,7 @@ export const useAuthStore = create((set, get) => ({
       set({ isCheckingAuth: true });
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
-      console.log("auth user => ", get().authUser); // ✅ Logs updated user
+     
       get().connectsocket();
     } catch (error) {
       console.log("Error in checkAuth", error);
@@ -49,7 +49,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data.data });
-      console.log("Logged in user:", get().authUser); // ✅ Logs updated user
+     // ✅ Logs updated user
       toast.success("Logged In Successfully");
       get().connectsocket();
     } catch (error) {
@@ -89,29 +89,23 @@ export const useAuthStore = create((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    console.log("Auth User", authUser);
-    console.log(
-      "🔹 Attempting Socket Connection with UserID:",
-      await authUser._id
-    );
+  
 
     const socket = io(BASE_URL, {
       query: { userId: authUser?._id }, // Ensure this exists
     });
 
     set({ socket: socket });
-
     socket.on("connect", () => {
-      console.log("✅ Socket Connected:", socket.id);
+     
     });
 
     socket.on("getOnlineUsers", (userIds) => {
-      console.log("🟢 Online Users List Updated:", userIds);
       set({ onlineUsers: [...userIds] });
     });
   },
 
   disconnectsocket: async () => {
-    get().socket?.disconnect(); // ✅ Prevents crash if socket is null
+    get().socket?.disconnect(); 
   },
 }));

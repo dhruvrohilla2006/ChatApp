@@ -36,7 +36,7 @@ export const useChatStore = create((set, get) => ({
   sendMessages: async (messageData) => {
     const { selectedUser, messages } = get();
     set({ isSendingMessage: true });
-    console.log("Message sent =>\t", messageData);
+   
 
     toast.loading("Message is Sending");
 
@@ -63,12 +63,11 @@ export const useChatStore = create((set, get) => ({
 
     if (!selectedUser) return;
 
-    console.log("subscribe to messages => ", selectedUser._id);
+ 
 
     const socket = useAuthStore.getState().socket;
   
     socket.on("newMessage", (newMessage) => {
-      console.log("new message => ", newMessage);
         const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
     if (!isMessageSentFromSelectedUser) return;
       const premessages = get().messages
@@ -80,7 +79,6 @@ export const useChatStore = create((set, get) => ({
 
   unSubscribeToMessages: () => {
     const socket = useAuthStore.getState().socket;
-     console.log("unsbscribed to messages");
     socket.off("newMessage");
    
   },

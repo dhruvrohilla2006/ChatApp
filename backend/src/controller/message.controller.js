@@ -52,6 +52,12 @@ export const sendMessage = async (req, res) => {
       });
 
       await newMessage.save();
+     
+      const reciverSocketId = await getReciverSocketId(reciverId);
+      if (reciverSocketId) {
+        io.to(reciverSocketId).emit("newMessage", newMessage);
+      }
+
       res.status(200).json(newMessage);
     } else {
       fileUrl = req.imageUrl;
@@ -63,11 +69,9 @@ export const sendMessage = async (req, res) => {
       });
 
       await newMessage.save();
-      console.log("In Message controller");
       const reciverSocketId = await getReciverSocketId(reciverId);
-      console.log(reciverSocketId);
       if (reciverSocketId) {
-        console.log("meesage => \t", newMessage);
+       
         io.to(reciverSocketId).emit("newMessage", newMessage);
       }
 
