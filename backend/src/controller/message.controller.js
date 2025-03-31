@@ -1,4 +1,4 @@
-import User from "../modals/User.modal.js";
+import User from "../modals/user.modal.js";
 import Message from "../modals/message.modal.js";
 import { getReciverSocketId, io } from "../libs/socket.js";
 
