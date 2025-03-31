@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import authRoute from "./routes/auth.route.js";
 import Connection from "./libs/connection.js";
 import cookieParser from "cookie-parser";
-import path from path
+import path from 'path'
 import cors from "cors";
 import messageRoute from "./routes/message.route.js";
 import { app,server } from "./libs/socket.js";
